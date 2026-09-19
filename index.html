@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Palette de Pokémon</title>
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<style>
+:root{
+  --bg:#f2f2f2;
+  --card:#ffffff;
+  --txt:#1a1a1a;
+  --sub-rgb:110,110,110;
+  --sub:#6e6e6e;
+  --accent:#6e6e6e;
+  --border:rgba(var(--sub-rgb),.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+input,textarea{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text}
+html,body{margin:0;padding:0;overscroll-behavior-y:none;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh}
+
+header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#ffffff,var(--bg) 60%);padding:13px 14px 9px}
+.title{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding-right:43px;min-height:34px}
+#hlogo,#htitle{cursor:pointer}
+.title img{width:24px;height:24px;object-fit:contain}
+.title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.searchwrap{position:relative;margin:0 0 10px}
+.search{width:100%;padding:9px 38px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;outline:none}
+.search:focus{border-color:var(--accent)}
+.qclear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qclear svg{width:15px;height:15px}
+.qclear svg path{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
+.search::placeholder{color:rgba(var(--sub-rgb),.7)}
+.suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:150px;overflow-y:auto;z-index:25;display:none}
+.suggest.open{display:block}
+.suggest .sitem{padding:9px 12px;font-size:13px;cursor:pointer;color:var(--txt)}
+.suggest .sitem:hover{background:var(--bg)}
+
+.stripwrap{padding:0 0 10px}
+.strip{display:flex;gap:6px;overflow-x:auto;padding:4px 14px 6px;scroll-behavior:smooth}
+.strip::-webkit-scrollbar{height:0}
+.sitm{flex:0 0 auto;width:46px;height:46px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s ease,transform .1s ease}
+.sitm img{width:78%;height:78%;object-fit:contain}
+.sitm.active{border-color:var(--accent);border-width:1.5px}
+.sitm:active{transform:scale(.94)}
+
+.plist{display:flex;flex-direction:column;gap:10px;padding:2px 14px 40px}
+.prow{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+.prow .pleft{flex:0 0 92px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.prow .pleft img{width:84px;height:84px;object-fit:contain}
+.prow .pno{font-size:11px;color:var(--sub);font-weight:700}
+.prow .pname{font-size:14px;font-weight:800;word-break:keep-all;line-height:1.25}
+.prow .pright{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;justify-content:center}
+.pr-line{display:flex;align-items:baseline;gap:8px;font-size:12.5px}
+.pr-line .k{color:var(--sub);font-weight:700;flex:0 0 34px}
+.pr-line .v{font-weight:600}
+.typebadges{display:flex;gap:6px;flex-wrap:wrap}
+.typebadge{display:inline-flex;align-items:center;padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff}
+.palette{display:flex;align-items:center;gap:7px;margin-top:2px}
+.swatch{width:22px;height:22px;border-radius:7px;border:1px solid rgba(0,0,0,.08);flex:0 0 auto}
+.swatch-hex{font-size:9.5px;color:var(--sub);display:block;text-align:center;margin-top:2px;font-family:monospace}
+.swatchcol{display:flex;flex-direction:column;align-items:center}
+
+.empty{text-align:center;color:var(--sub);padding:50px 20px;font-size:13px}
+.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px}
+
+#menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:640px;margin:0 auto;z-index:33;display:flex;justify-content:flex-end;pointer-events:none}
+#menubtn{position:relative;margin-top:13px;margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0}
+#menubtn span{display:block;width:19px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease}
+#menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+#menubtn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+#menubtn.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+#menuOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,20,20,.4);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s ease}
+#menuOverlay.open{opacity:1;pointer-events:auto}
+#mpanelWrap{position:fixed;top:0;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;z-index:31;display:flex;justify-content:flex-end;pointer-events:none}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(0,0,0,.15);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
+#mpanel.open{opacity:1;transform:scale(1);pointer-events:auto}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:18px 0 6px;background:#ffffff;z-index:1}
+.mtitle img{width:22px;height:22px;object-fit:contain}
+.mtitle span{font-size:15px;font-weight:800}
+.mgreet{display:none;font-size:12.5px;color:var(--sub);text-align:left;margin-top:30px}
+.mgreet.show{display:block}
+.mfooter{padding-top:6px;display:flex;gap:8px}
+.mbig{flex:1;text-align:center;background:var(--bg);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(20,20,20,.4);z-index:40;align-items:center;justify-content:center;padding:24px}
+.modal.open{display:flex}
+.modal .box{background:#ffffff;border-radius:16px;padding:26px 22px;width:100%;max-width:300px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal h2{font-size:16px;margin:0 0 14px;font-weight:800;color:var(--txt)}
+.modal input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--txt);font-size:14px;padding:10px 12px;margin-bottom:9px;outline:none;font-family:inherit}
+.modal input:focus{border-color:var(--accent)}
+.modal button.primary{margin-top:4px;width:100%;background:var(--accent);border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;color:#ffffff;cursor:pointer}
+.modal button.secondary{margin-top:8px;width:100%;background:none;border:none;color:var(--sub);font-size:12.5px;padding:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title"><img id="hlogo" src="favicon-192.png" alt="ball"><h1 id="htitle">Palette de Pokémon</h1></div>
+    <div class="searchwrap">
+      <input id="q" class="search" type="text" placeholder="포켓몬 이름 검색" autocomplete="off">
+      <button id="qclear" class="qclear" type="button" aria-label="검색어 지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
+      <div id="suggestBox" class="suggest"></div>
+    </div>
+  </header>
+
+  <div class="stripwrap"><div class="strip" id="strip"></div></div>
+
+  <div class="plist" id="mainList"></div>
+
+  <div class="sitefooter">본 사이트는 팬이 만든 비공식 사이트로, 닌텐도, 게임프리크, 주식회사 포켓몬과는 어떠한 관계도 없습니다. Pokemon은 닌텐도 / Creatures Inc. / Game Freak Inc.의 상표입니다. 모든 게임 콘텐츠, 이미지, 상표는 각 권리자에게 귀속됩니다.</div>
+</div>
+
+<div id="menubtnWrap"><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
+<div id="menuOverlay"></div>
+<div id="mpanelWrap">
+  <div id="mpanel">
+    <div class="mtitle"><img src="favicon-192.png" alt="ball"><span>Palette de Pokémon</span></div>
+    <div id="mgreet" class="mgreet"></div>
+    <div class="mfooter">
+      <a class="mbig" href="https://iruroda.github.io/pokelab/" target="_blank" rel="noopener">Pokélab 메인으로</a>
+      <button class="mbig" id="loginBtn" type="button">로그인</button>
+    </div>
+  </div>
+</div>
+
+<div id="loginModal" class="modal">
+  <div class="box">
+    <h2 id="loginTitle">로그인</h2>
+    <input id="loginId" type="text" placeholder="아이디" autocomplete="username">
+    <input id="loginPw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button class="primary" id="loginSubmit" type="button"><span id="loginBtnTxt">확인</span></button>
+    <button class="secondary" id="loginCancel" type="button">닫기</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+var TYPE_COLORS={"노말":"#9099a1","불꽃":"#ff9d55","물":"#5090d6","풀":"#63bc5a","전기":"#f4d23c","얼음":"#73cec0","격투":"#ce4069","독":"#ab6ac8","땅":"#d97746","비행":"#8fa8dd","에스퍼":"#fa7179","벌레":"#91c12f","바위":"#c5b78c","고스트":"#5269ad","드래곤":"#0b6dc3","악":"#5a5366","강철":"#5a8ea1","페어리":"#ec8fe6"};
+var $=function(id){return document.getElementById(id)};
+var DEX=[];
+var q='';
+
+function pad3(n){return String(n).padStart(3,'0')}
+
+function typeBadge(t){
+  var bg=TYPE_COLORS[t]||'#999';
+  return '<span class="typebadge" style="background:'+bg+'">'+t+'</span>';
+}
+
+function paletteHTML(top3){
+  return (top3||[]).map(function(c){
+    return '<div class="swatchcol"><div class="swatch" style="background:'+c.hex+'"></div><span class="swatch-hex">'+c.hex+'</span></div>';
+  }).join('');
+}
+
+function buildStrip(list){
+  var strip=$('strip');
+  strip.innerHTML=list.map(function(p){
+    return '<div class="sitm" data-dex="'+p.dex+'" title="'+p.name+'"><img loading="lazy" src="'+p.img+'" alt="" onerror="this.style.opacity=.2"></div>';
+  }).join('');
+  strip.querySelectorAll('.sitm').forEach(function(el){
+    el.onclick=function(){
+      var row=document.querySelector('.prow[data-dex="'+el.dataset.dex+'"]');
+      if(row)row.scrollIntoView({behavior:'smooth',block:'center'});
+    };
+  });
+}
+
+function buildList(list){
+  var box=$('mainList');
+  if(!list.length){box.innerHTML='<div class="empty">검색 결과가 없습니다.</div>';return}
+  box.innerHTML=list.map(function(p){
+    return '<div class="prow" data-dex="'+p.dex+'">'
+      +'<div class="pleft"><img loading="lazy" src="'+p.img+'" alt="'+p.name+'" onerror="this.style.opacity=.2"><span class="pno">#'+pad3(p.dex)+'</span><span class="pname">'+p.name+'</span></div>'
+      +'<div class="pright">'
+        +'<div class="typebadges">'+p.types.map(typeBadge).join('')+'</div>'
+        +'<div class="pr-line"><span class="k">분류</span><span class="v">'+(p.category||'')+'</span></div>'
+        +'<div class="pr-line"><span class="k">키</span><span class="v">'+(p.height||'')+'</span></div>'
+        +'<div class="pr-line"><span class="k">몸무게</span><span class="v">'+(p.weight||'')+'</span></div>'
+        +'<div class="palette">'+paletteHTML(p.top3)+'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function render(){
+  var list=DEX;
+  if(q){list=DEX.filter(function(p){return p.name.indexOf(q)>-1})}
+  buildStrip(list);
+  buildList(list);
+}
+
+function hideSuggest(){var b=$('suggestBox');b.classList.remove('open');b.innerHTML=''}
+function updateSuggest(){
+  var box=$('suggestBox');
+  if(!q){hideSuggest();return}
+  var matches=DEX.filter(function(p){return p.name.indexOf(q)>-1}).slice(0,8);
+  if(!matches.length){hideSuggest();return}
+  box.innerHTML='';
+  matches.forEach(function(p){
+    var d=document.createElement('div');d.className='sitem';d.textContent='#'+pad3(p.dex)+' '+p.name;
+    d.onmousedown=function(e){e.preventDefault();q=p.name;$('q').value=p.name;hideSuggest();render();};
+    box.appendChild(d);
+  });
+  box.classList.add('open');
+}
+$('q').addEventListener('input',function(e){q=e.target.value.trim();render();updateSuggest();});
+document.addEventListener('click',function(e){if(!e.target.closest('.searchwrap'))hideSuggest()});
+$('qclear').onclick=function(){q='';$('q').value='';render();hideSuggest()};
+$('hlogo').onclick=$('htitle').onclick=function(){q='';$('q').value='';render();hideSuggest();window.scrollTo({top:0,behavior:'smooth'})};
+
+fetch('basedex.json').then(function(r){return r.json()}).then(function(data){
+  DEX=data;
+  render();
+}).catch(function(e){
+  $('mainList').innerHTML='<div class="empty">데이터를 불러오지 못했습니다.</div>';
+  console.error(e);
+});
+
+function openMenu(){$('menubtn').classList.add('open');$('menuOverlay').classList.add('open');$('mpanel').classList.add('open');document.documentElement.style.overflow='hidden'}
+function closeMenu(){$('menubtn').classList.remove('open');$('menuOverlay').classList.remove('open');$('mpanel').classList.remove('open');document.documentElement.style.overflow=''}
+$('menubtn').onclick=function(){if($('menuOverlay').classList.contains('open'))closeMenu();else openMenu()};
+$('menuOverlay').addEventListener('click',function(e){if(e.target.id==='menuOverlay')closeMenu()});
+
+// 페이지 전체 드래그/우클릭 금지
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('dragstart',function(e){e.preventDefault()});
+document.addEventListener('drop',function(e){e.preventDefault()});
+document.addEventListener('gesturestart',function(e){e.preventDefault()});
+
+// ---- Firebase: pokelab/pokopia와 동일 프로젝트/계정 체계 공유 ----
+var FIREBASE_CONFIG={apiKey:"AIzaSyA1qlkS_vNnAEMhyeJxH0EHRxYrFeJXZDk",authDomain:"todayspokemon-ef9c0.firebaseapp.com",projectId:"todayspokemon-ef9c0",storageBucket:"todayspokemon-ef9c0.firebasestorage.app",messagingSenderId:"69457831977",appId:"1:69457831977:web:faeee4ba343a6c9b931438"};
+var fbAuth=null, db=null;
+try{
+  firebase.initializeApp(FIREBASE_CONFIG);
+  fbAuth=firebase.auth();
+  db=firebase.firestore();
+}catch(e){console.error('Firebase 초기화 실패',e)}
+
+function idToEmail(id){
+  var hex="",bytes=unescape(encodeURIComponent(id));
+  for(var i=0;i<bytes.length;i++){var h=bytes.charCodeAt(i).toString(16);hex+=(h.length<2?"0":"")+h}
+  return "u"+hex+"@todayspokemon.app";
+}
+function emailToId(email){
+  try{
+    var hex=email.slice(1,email.indexOf('@'));
+    var bytes="";
+    for(var i=0;i<hex.length;i+=2){bytes+=String.fromCharCode(parseInt(hex.substr(i,2),16))}
+    return decodeURIComponent(escape(bytes));
+  }catch(e){return email}
+}
+
+var CUR_USER=null;
+function updateAuthUI(){
+  $('loginBtn').textContent=CUR_USER?'로그아웃':'로그인';
+  var g=$('mgreet');
+  if(CUR_USER){g.textContent=CUR_USER+'님, 안녕하세요.'}
+  else{g.textContent='로그인하면 정답 기록을 저장할 수 있습니다.'}
+  g.classList.add('show');
+}
+var loginBtnMsgTimer=null;
+function loginBtnFlash(text){
+  var btxt=$('loginBtnTxt');
+  clearTimeout(loginBtnMsgTimer);
+  btxt.style.opacity='0';
+  setTimeout(function(){btxt.textContent=text;btxt.style.opacity='1'},180);
+  loginBtnMsgTimer=setTimeout(function(){
+    btxt.style.opacity='0';
+    setTimeout(function(){btxt.textContent='확인';btxt.style.opacity='1'},180);
+  },1800);
+}
+function openLogin(){clearTimeout(loginBtnMsgTimer);var btxt=$('loginBtnTxt');btxt.textContent='확인';btxt.style.opacity='1';$('loginId').value='';$('loginPw').value='';$('loginModal').classList.add('open')}
+function closeLogin(){$('loginModal').classList.remove('open')}
+$('loginCancel').onclick=closeLogin;
+$('loginModal').addEventListener('click',function(e){if(e.target.id==='loginModal')closeLogin()});
+function loginEnterKey(e){if(e.key==='Enter'){e.preventDefault();$('loginSubmit').click()}}
+$('loginId').addEventListener('keydown',loginEnterKey);
+$('loginPw').addEventListener('keydown',loginEnterKey);
+$('loginBtn').onclick=function(){
+  if(CUR_USER){if(fbAuth)fbAuth.signOut();return}
+  openLogin();
+};
+$('loginSubmit').onclick=function(){
+  var id=$('loginId').value.trim();
+  var pw=$('loginPw').value;
+  var btn=$('loginSubmit');
+  var btxt=$('loginBtnTxt');
+  if(!id||!pw){loginBtnFlash('아이디와 비밀번호를 입력해주세요.');return}
+  if(!fbAuth){loginBtnFlash('서버 연결이 안 돼 로그인할 수 없습니다.');return}
+  if(pw.length<6){loginBtnFlash('비밀번호는 6자 이상이어야 합니다.');return}
+  var email=idToEmail(id);
+  if(email.length>80){loginBtnFlash('아이디가 너무 깁니다.');return}
+  clearTimeout(loginBtnMsgTimer);btn.disabled=true;btxt.textContent='로그인 중…';btxt.style.opacity='1';
+  fbAuth.signInWithEmailAndPassword(email,pw)
+    .then(function(){
+      btn.disabled=false;btxt.textContent='확인';btxt.style.opacity='1';
+      closeLogin();closeMenu();
+    })
+    .catch(function(err){
+      btn.disabled=false;
+      var code=err&&err.code;
+      if(code==='auth/user-not-found'){loginBtnFlash('존재하지 않는 아이디입니다.')}
+      else if(code==='auth/wrong-password'){loginBtnFlash('비밀번호가 일치하지 않아요.')}
+      else if(code==='auth/invalid-email'){loginBtnFlash('아이디 형식이 올바르지 않아요.')}
+      else if(code==='auth/network-request-failed'){loginBtnFlash('네트워크 연결을 확인해주세요.')}
+      else{loginBtnFlash('계정 정보가 일치하지 않습니다.');console.error(err)}
+    });
+};
+if(fbAuth){
+  fbAuth.onAuthStateChanged(function(user){
+    CUR_USER=user?emailToId(user.email):null;
+    updateAuthUI();
+  });
+}
+updateAuthUI();
+</script>
+</body>
+</html>
