@@ -31,7 +31,10 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .searchwrap{position:relative;margin:0 0 10px}
-.search{width:100%;padding:9px 38px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;outline:none}
+.searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.searchIcon svg{width:16px;height:16px}
+.searchIcon svg circle,.searchIcon svg line{stroke:var(--sub);stroke-width:2;stroke-linecap:round}
+.search{width:100%;padding:9px 38px 9px 36px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;outline:none}
 .search:focus{border-color:var(--accent)}
 .qclear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .qclear svg{width:15px;height:15px}
@@ -52,8 +55,8 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 
 .plist{display:flex;flex-direction:column;gap:10px;padding:2px 14px 40px}
 .prow{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
-.prow .pleft{flex:0 0 92px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
-.prow .pleft img{width:84px;height:84px;object-fit:contain}
+.prow .pleft{flex:0 0 260px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.prow .pleft img{width:252px;height:252px;object-fit:contain;image-rendering:pixelated;image-rendering:-moz-crisp-edges;image-rendering:crisp-edges}
 .prow .pno{font-size:11px;color:var(--sub);font-weight:700}
 .prow .pname{font-size:14px;font-weight:800;word-break:keep-all;line-height:1.25}
 .prow .pright{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;justify-content:center}
@@ -105,7 +108,8 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
   <header>
     <div class="title"><img id="hlogo" src="favicon-192.png" alt="ball"><h1 id="htitle">Palette de Pokémon</h1></div>
     <div class="searchwrap">
-      <input id="q" class="search" type="text" placeholder="포켓몬 이름 검색" autocomplete="off">
+      <span class="searchIcon"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+      <input id="q" class="search" type="text" autocomplete="off">
       <button id="qclear" class="qclear" type="button" aria-label="검색어 지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
       <div id="suggestBox" class="suggest"></div>
     </div>
