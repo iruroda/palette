@@ -29,7 +29,8 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .title img{width:24px;height:24px;object-fit:contain}
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.searchwrap{position:relative;margin:0 0 10px}
+.searchwrap{position:relative;margin:0;max-height:0;opacity:0;overflow:hidden;transition:max-height .25s ease,opacity .2s ease,margin .25s ease}
+.searchwrap.open{max-height:60px;opacity:1;margin:0 0 10px}
 .searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .searchIcon svg{width:16px;height:16px}
 .searchIcon svg circle,.searchIcon svg line{stroke:var(--sub);stroke-width:2;stroke-linecap:round}
@@ -80,7 +81,12 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .empty{text-align:center;color:var(--sub);padding:50px 20px;font-size:13px}
 .sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px}
 
-#menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:640px;margin:0 auto;z-index:33;display:flex;justify-content:flex-end;pointer-events:none}
+#menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:640px;margin:0 auto;z-index:33;display:flex;align-items:center;justify-content:flex-end;pointer-events:none}
+.hicon-btn{position:relative;margin-top:13px;margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
+.hicon-btn svg{width:20px;height:20px;display:block}
+#quizBtn svg circle{fill:var(--accent)}
+#searchToggleBtn svg circle,#searchToggleBtn svg line{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;fill:none}
+#searchToggleBtn.active svg circle,#searchToggleBtn.active svg line{stroke:var(--txt)}
 #menubtn{position:relative;margin-top:13px;margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0}
 #menubtn span{display:block;width:19px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease}
 #menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
@@ -114,7 +120,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 <div class="wrap">
   <header>
     <div class="title"><img id="hlogo" src="favicon-192.png" alt="ball"><h1 id="htitle">Palette de Pokémon</h1></div>
-    <div class="searchwrap">
+    <div class="searchwrap" id="searchWrapBox">
       <span class="searchIcon"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
       <input id="q" class="search" type="text" autocomplete="off">
       <button id="qclear" class="qclear" type="button" aria-label="검색어 지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
@@ -129,7 +135,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
   <div class="sitefooter">본 사이트는 팬이 만든 비공식 사이트로, 닌텐도, 게임프리크, 주식회사 포켓몬과는 어떠한 관계도 없습니다. Pokemon은 닌텐도 / Creatures Inc. / Game Freak Inc.의 상표입니다. 모든 게임 콘텐츠, 이미지, 상표는 각 권리자에게 귀속됩니다.</div>
 </div>
 
-<div id="menubtnWrap"><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
+<div id="menubtnWrap"><button id="quizBtn" class="hicon-btn" type="button" aria-label="퀴즈 메뉴"><svg viewBox="0 0 100 100"><circle cx="50" cy="68" r="26"></circle><circle cx="22" cy="32" r="15"></circle><circle cx="52" cy="18" r="15"></circle><circle cx="80" cy="33" r="13"></circle></svg></button><button id="searchToggleBtn" class="hicon-btn" type="button" aria-label="검색 토글"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
 <div id="menuOverlay"></div>
 <div id="mpanelWrap">
   <div id="mpanel">
@@ -360,6 +366,14 @@ $('q').addEventListener('input',function(e){q=e.target.value.trim();render();upd
 document.addEventListener('click',function(e){if(!e.target.closest('.searchwrap'))hideSuggest()});
 $('qclear').onclick=function(){q='';$('q').value='';render();hideSuggest()};
 $('hlogo').onclick=$('htitle').onclick=function(){q='';$('q').value='';render();hideSuggest();window.scrollTo({top:0,behavior:'smooth'})};
+function toggleSearch(){
+  var box=$('searchWrapBox');
+  var open=box.classList.toggle('open');
+  $('searchToggleBtn').classList.toggle('active',open);
+  if(open){setTimeout(function(){$('q').focus()},260)}
+  else{q='';$('q').value='';render();hideSuggest()}
+}
+$('searchToggleBtn').onclick=toggleSearch;
 $('strip').addEventListener('scroll',closeExpand);
 
 try{
