@@ -145,6 +145,17 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .mtoggle.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .mtoggle:disabled,.disabled-group .mtoggle{pointer-events:none}
 
+@media (hover:hover) and (pointer:fine){
+  html{scrollbar-gutter:stable}
+  #mpanel{scrollbar-gutter:stable}
+  html,#mpanel{scrollbar-width:thin}
+  html::-webkit-scrollbar-track,#mpanel::-webkit-scrollbar-track{background:transparent}
+  html::-webkit-scrollbar-thumb,#mpanel::-webkit-scrollbar-thumb{background:transparent;border-radius:6px;transition:background .25s}
+  html.scrolling::-webkit-scrollbar-thumb,#mpanel.scrolling::-webkit-scrollbar-thumb{background:rgba(0,0,0,.28)}
+  html.scrolling::-webkit-scrollbar-thumb:hover,#mpanel.scrolling::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.42)}
+  html,#mpanel{scrollbar-color:transparent transparent}
+  html.scrolling,#mpanel.scrolling{scrollbar-color:rgba(0,0,0,.28) transparent}
+}
 </style>
 </head>
 <body>
@@ -624,6 +635,10 @@ if(fbAuth){
   });
 }
 updateAuthUI();
+/* 스크롤바 자동 표시: 자리는 항상 확보하고 스크롤 중에만 thumb 표시 */
+function hookScroll(target,classEl){var t;target.addEventListener('scroll',function(){classEl.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){classEl.classList.remove('scrolling')},650)},{passive:true})}
+hookScroll(window,document.documentElement);
+hookScroll($('mpanel'),$('mpanel'));
 </script>
 </body>
 </html>
