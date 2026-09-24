@@ -14,6 +14,7 @@
   --txt:#1a1a1a;
   --accent:#6e6e6e;
   --border:#d1d1d1;
+  --on-accent:#ffffff;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 *{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
@@ -65,7 +66,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,var(--
 .prow[data-multi="1"]{touch-action:pan-y}
 .pinner{position:relative;width:100%}
 .pcontent{display:flex;flex-direction:column;gap:8px;padding:14px;width:100%;box-sizing:border-box;background:var(--card);height:226px;overflow:hidden}
-.ptop{display:flex;align-items:baseline;gap:6px;padding-right:26px}
+.ptop{display:flex;align-items:baseline;gap:6px;padding-right:56px}
 .ptop .pno{font-size:11px;color:var(--accent);font-weight:700;flex:0 0 auto}
 .ptop .pname{font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
 .pbody{display:flex;gap:14px;min-width:0}
@@ -86,10 +87,13 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,var(--
 .swatchbar{width:100%;min-height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;font-family:monospace;letter-spacing:.4px}
 .pal6 .swatchbar{font-size:9px;letter-spacing:.2px}
 .swatchbar.empty{background:var(--bg)!important;border:1px dashed var(--border);color:transparent!important}
-.pquizmark{position:absolute;top:12px;right:12px;width:20px;height:18px;z-index:2;pointer-events:none}
+.pquizmark{position:absolute;top:11px;right:12px;width:20px;height:20px;z-index:2;pointer-events:none}
 .pquizmark svg{width:100%;height:100%;display:block}
 .pquizmark circle{fill:none;stroke:var(--border);stroke-width:7}
 .pquizmark.solved circle{fill:var(--accent);stroke:var(--accent)}
+.brushbtn{position:absolute;top:11px;right:38px;width:20px;height:20px;z-index:2;padding:0;margin:0;border:none;background:none;cursor:pointer;display:block;touch-action:manipulation}
+.brushbtn svg{width:100%;height:100%;display:block}
+.brushbtn:active{opacity:.7}
 
 @media (max-width:380px){
   .pcontent{height:210px}
@@ -140,7 +144,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,var(--
 .mtoggles{display:flex;flex-wrap:wrap;gap:6px}
 .mtoggles.disabled-group{opacity:.35}
 .mtoggle{padding:0 12px;height:28px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--txt);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
-.mtoggle.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.mtoggle.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .mtoggle:disabled,.disabled-group .mtoggle{pointer-events:none}
 
 @media (hover:hover) and (pointer:fine){
@@ -157,6 +161,21 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,var(--
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="brushIcon" viewBox="0 0 20 20">
+      <mask id="brushMask" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
+        <rect width="20" height="20" fill="#fff"/>
+        <g transform="translate(-.8 .8) rotate(45 10 10)" fill="#000" stroke="#000" stroke-width="1" stroke-linejoin="round">
+          <path d="M5.9 8.3 5.5 3.6h9l-.4 4.7z"/>
+          <path d="M6.3 10.4h7.4v1.6H6.3z"/>
+          <path d="M8.6 12v3.4a1.4 1.4 0 0 0 2.8 0V12z"/>
+        </g>
+      </mask>
+      <rect width="20" height="20" rx="5" mask="url(#brushMask)" style="fill:var(--accent)"/>
+    </symbol>
+  </defs>
+</svg>
 <div class="wrap">
   <header>
     <div class="title"><img id="hlogo" src="favicon-192.png" alt="ball"><h1 id="htitle">Palette de Pokémon</h1></div>
@@ -385,6 +404,7 @@ function attachSwipeHandlers(){
   document.querySelectorAll('.prow[data-multi="1"]').forEach(function(row){
     var startX=null,startY=null,dragging=false,pid=null;
     row.addEventListener('pointerdown',function(e){
+      if(e.target.closest&&e.target.closest('.brushbtn'))return;
       startX=e.clientX;startY=e.clientY;dragging=true;pid=e.pointerId;
       try{row.setPointerCapture(pid)}catch(err){}
     });
@@ -461,12 +481,13 @@ function buildStripOnce(){
   strip.addEventListener('click',function(e){if(e.target===strip)closeExpand()});
 }
 
-var PAW_SVG='<svg viewBox="0 0 110 98"><circle cx="55" cy="71" r="26"></circle><circle cx="16.5" cy="32.5" r="16"></circle><circle cx="55" cy="16.5" r="16"></circle><circle cx="93.5" cy="32.5" r="16"></circle></svg>';
+var PAW_SVG='<svg viewBox="-3.5 -3.5 117 105"><circle cx="55" cy="71" r="26"></circle><circle cx="16.5" cy="32.5" r="16"></circle><circle cx="55" cy="16.5" r="16"></circle><circle cx="93.5" cy="32.5" r="16"></circle></svg>';
 function buildListOnce(){
   var box=$('mainList');
   box.innerHTML=DEX.map(function(p){
     var multi=FORMS[p.dex]&&FORMS[p.dex].length>1;
     return '<div class="prow" data-dex="'+p.dex+'" data-form-idx="0"'+(multi?' data-multi="1"':'')+'>'
+      +'<button class="brushbtn" type="button" aria-label="이 포켓몬 색으로 사이트 색 바꾸기"><svg><use href="#brushIcon"/></svg></button>'
       +'<span class="pquizmark">'+PAW_SVG+'</span>'
       +'<div class="pinner"><div class="pcontent">'+rowContentHTML(p)+'</div></div>'
     +'</div>';
@@ -581,6 +602,84 @@ try{
   $('mainList').innerHTML='<div class="empty">데이터를 불러오지 못했습니다.</div>';
   console.error(e);
 }
+
+// ---- 붓 버튼: 포켓몬 대표 3색으로 사이트 색(진한색=강조, 중간=테두리, 옅은색=배경) 바꾸기 ----
+var DEFAULT_THEME={bg:'#f2f2f2',border:'#d1d1d1',accent:'#6e6e6e'};
+var CARD_HEX='#ffffff',TXT_HEX='#1a1a1a';
+var ACTIVE_THEME_KEY=null;
+function hexToRgb(h){
+  h=String(h||'').replace('#','');
+  if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  return [parseInt(h.substr(0,2),16)||0,parseInt(h.substr(2,2),16)||0,parseInt(h.substr(4,2),16)||0];
+}
+function relLum(hex){
+  var c=hexToRgb(hex).map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
+  return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];
+}
+function contrastRatio(a,b){
+  var la=relLum(a),lb=relLum(b);
+  return (Math.max(la,lb)+0.05)/(Math.min(la,lb)+0.05);
+}
+function mixHex(a,b,r){
+  var x=hexToRgb(a),y=hexToRgb(b);
+  return '#'+[0,1,2].map(function(i){
+    var v=Math.round(x[i]*(1-r)+y[i]*r);
+    return (v<16?'0':'')+v.toString(16);
+  }).join('');
+}
+// 강조색 위 글씨: 흰색 <-> 검정 자동 선택
+function onColorFor(hex){
+  return contrastRatio(hex,CARD_HEX)>=contrastRatio(hex,TXT_HEX)?CARD_HEX:TXT_HEX;
+}
+function themeFromTop3(top3){
+  var cols=(top3||[]).map(function(c){return c&&c.hex}).filter(Boolean);
+  if(!cols.length)return null;
+  cols.sort(function(a,b){return relLum(a)-relLum(b)});
+  var t={accent:cols[0],border:DEFAULT_THEME.border,bg:DEFAULT_THEME.bg};
+  if(cols.length>1)t.bg=cols[cols.length-1];
+  if(cols.length>2)t.border=cols[1];
+  // 글씨가 잘 보이는 게 우선: 배경이 너무 어두우면 검정 글씨가 읽힐 때까지 흰색 쪽으로 살짝 밝힘
+  var bg0=t.bg;
+  for(var r=0.05;r<=1&&contrastRatio(TXT_HEX,t.bg)<4.5;r+=0.05)t.bg=mixHex(bg0,CARD_HEX,r);
+  // 강조색이 글씨로 쓰일 때 카드/배경 위에서 안 보이면 잘 보일 때까지 검정 쪽으로 살짝 어둡게
+  var ac0=t.accent;
+  for(var q2=0.05;q2<=1&&(contrastRatio(t.accent,CARD_HEX)<3||contrastRatio(t.accent,t.bg)<3);q2+=0.05)t.accent=mixHex(ac0,TXT_HEX,q2);
+  return t;
+}
+function applyTheme(t){
+  var st=document.documentElement.style;
+  if(!t){
+    ['--bg','--border','--accent','--on-accent'].forEach(function(k){st.removeProperty(k)});
+    return;
+  }
+  st.setProperty('--bg',t.bg);
+  st.setProperty('--border',t.border);
+  st.setProperty('--accent',t.accent);
+  st.setProperty('--on-accent',onColorFor(t.accent));
+}
+function syncBrushState(){
+  document.querySelectorAll('#mainList .brushbtn').forEach(function(b){
+    var row=b.closest('.prow');
+    var key=row?row.dataset.dex+':'+(row.dataset.formIdx||'0'):null;
+    b.setAttribute('aria-pressed',key&&key===ACTIVE_THEME_KEY?'true':'false');
+  });
+}
+$('mainList').addEventListener('click',function(e){
+  var btn=e.target.closest&&e.target.closest('.brushbtn');
+  if(!btn)return;
+  var row=btn.closest('.prow');
+  if(!row)return;
+  var dex=row.dataset.dex,idx=parseInt(row.dataset.formIdx||'0',10);
+  var key=dex+':'+idx;
+  if(ACTIVE_THEME_KEY===key){ACTIVE_THEME_KEY=null;applyTheme(null);syncBrushState();return}
+  var forms=FORMS[dex];
+  var f=forms&&forms[idx];
+  var t=f&&themeFromTop3(f.top3);
+  if(!t)return;
+  ACTIVE_THEME_KEY=key;
+  applyTheme(t);
+  syncBrushState();
+});
 
 function openMenu(){$('menubtn').classList.add('open');$('menuOverlay').classList.add('open');$('mpanel').classList.add('open');$('menubtnWrap').classList.add('menuopen');document.documentElement.style.overflow='hidden'}
 function closeMenu(){$('menubtn').classList.remove('open');$('menuOverlay').classList.remove('open');$('mpanel').classList.remove('open');$('menubtnWrap').classList.remove('menuopen');document.documentElement.style.overflow=''}
