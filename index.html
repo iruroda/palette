@@ -22,43 +22,41 @@ input,textarea{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:te
 html,body{margin:0;padding:0;overscroll-behavior-y:none;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Malgun Gothic",sans-serif}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh}
 
-header{position:sticky;top:0;z-index:15;background:var(--bg);padding:13px 14px 9px}
+header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8px}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding-right:43px;min-height:34px}
 #hlogo,#htitle{cursor:pointer}
 .title img{width:24px;height:24px;object-fit:contain}
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.searchwrap{position:relative;margin:0;height:0;overflow:hidden}
+.searchwrap{position:relative;margin:0;height:0;overflow:hidden;transition:height .22s ease,margin .22s ease}
 .searchwrap.open{height:34px;margin:0 0 10px}
-.searchIcon{position:absolute;left:12px;top:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:translateY(-50%) scaleY(.85);opacity:0;transform-origin:50% 50%;transition:transform .15s cubic-bezier(.2,.8,.3,1),opacity .12s ease}
-.searchwrap.open .searchIcon{transform:translateY(-50%) scaleY(1);opacity:1}
-.searchwrap.open.closing .searchIcon{transform:translateY(-50%) scaleY(.85);opacity:0}
+.searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .22s ease}
+.searchwrap.open .searchIcon{opacity:1}
 .searchIcon svg{width:16px;height:16px}
 .searchIcon svg circle,.searchIcon svg line{stroke:var(--accent);stroke-width:2;stroke-linecap:round}
-.search{width:100%;padding:9px 38px 9px 36px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--txt);font-size:14px;outline:none;height:34px;box-sizing:border-box;transform:scaleY(.85);opacity:0;transform-origin:50% 50%;transition:transform .15s cubic-bezier(.2,.8,.3,1),opacity .12s ease}
-.searchwrap.open .search{transform:scaleY(1);opacity:1}
-.searchwrap.open.closing .search{transform:scaleY(.85);opacity:0}
+.search{width:100%;padding:9px 38px 9px 36px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--txt);font-size:14px;outline:none;height:34px;box-sizing:border-box;opacity:0;transition:opacity .22s ease}
+.searchwrap.open .search{opacity:1}
 .search:focus{border-color:var(--accent)}
-.qclear{position:absolute;right:8px;top:50%;width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translateY(-50%) scaleY(.85);opacity:0;transform-origin:50% 50%;transition:transform .15s cubic-bezier(.2,.8,.3,1),opacity .12s ease}
-.searchwrap.open .qclear{transform:translateY(-50%) scaleY(1);opacity:1}
-.searchwrap.open.closing .qclear{transform:translateY(-50%) scaleY(.85);opacity:0}
+.qclear{position:absolute;right:8px;top:50%;width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translateY(-50%);opacity:0;transition:opacity .22s ease}
+.searchwrap.open .qclear{opacity:1}
 .qclear svg{width:15px;height:15px}
 .qclear svg path{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
 .search::placeholder{color:var(--accent);opacity:.7}
 
-.stripwrap{position:sticky;display:flex;align-items:stretch;padding:0 0 10px;z-index:14;background:var(--bg)}
+.stripwrap{display:flex;align-items:stretch;padding:0 0 10px}
 .stripArrow{flex:0 0 20px;width:20px;align-self:stretch;border:1px solid var(--border);border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;min-height:46px}
 .stripArrow svg{width:8px;height:14px;display:block}
 .stripArrow polygon{fill:var(--accent)}
-.stripArrow.left{margin-left:14px;margin-right:8px}
-.stripArrow.right{margin-right:14px;margin-left:8px}
+.stripArrow.left{margin-right:8px}
+.stripArrow.right{margin-left:8px}
 .stripArrow:active{background:var(--bg)}
 .stripClip{flex:1;min-width:0;position:relative;background:var(--bg)}
 .strip{display:flex;align-items:flex-start;gap:6px;overflow-x:auto;padding:4px 2px 6px;scroll-behavior:smooth}
 .strip::-webkit-scrollbar{height:0}
 .sitmCol{display:flex;flex-direction:column;flex:0 0 auto;width:46px}
 .sitm{position:relative;flex:0 0 auto;width:46px;height:46px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s ease,transform .1s ease}
-.sitm img{width:78%;height:78%;object-fit:contain}
+.sitmImgWrap{position:relative;overflow:hidden;width:78%;height:78%}
+.sitmImgWrap .simg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
 .sitm.active{border-color:var(--accent);border-width:1.5px}
 .sitm:active{transform:scale(.94)}
 .sitm.multi::after{content:'';position:absolute;left:50%;bottom:3px;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--accent)}
@@ -114,7 +112,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:13px 14px 9
 .sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px}
 
 #menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;align-items:center;justify-content:flex-end;pointer-events:none}
-.hicon-btn{position:relative;margin-top:13px;margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
+.hicon-btn{position:relative;margin-top:calc(12px + env(safe-area-inset-top));margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
 .hicon-btn svg{width:24px;height:24px;display:block}
 #quizBtn svg circle{fill:var(--accent)}
 #searchToggleBtn svg circle,#searchToggleBtn svg line{stroke:var(--accent);stroke-width:2.8;stroke-linecap:round;fill:none}
@@ -189,13 +187,12 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:13px 14px 9
       <input id="q" class="search" type="text" autocomplete="off">
       <button id="qclear" class="qclear" type="button" aria-label="검색어 지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
     </div>
+    <div class="stripwrap" id="stripwrap">
+      <button class="stripArrow left" id="stripArrowL" type="button" aria-label="이전"><svg viewBox="0 0 10 16"><polygon points="9,1 1,8 9,15"></polygon></svg></button>
+      <div class="stripClip" id="stripClip"><div class="strip" id="strip"></div></div>
+      <button class="stripArrow right" id="stripArrowR" type="button" aria-label="다음"><svg viewBox="0 0 10 16"><polygon points="1,1 9,8 1,15"></polygon></svg></button>
+    </div>
   </header>
-
-  <div class="stripwrap" id="stripwrap">
-    <button class="stripArrow left" id="stripArrowL" type="button" aria-label="이전"><svg viewBox="0 0 10 16"><polygon points="9,1 1,8 9,15"></polygon></svg></button>
-    <div class="stripClip" id="stripClip"><div class="strip" id="strip"></div></div>
-    <button class="stripArrow right" id="stripArrowR" type="button" aria-label="다음"><svg viewBox="0 0 10 16"><polygon points="1,1 9,8 1,15"></polygon></svg></button>
-  </div>
 
   <div class="plist" id="mainList"></div>
   <div class="empty" id="emptyMsg" style="display:none">검색 결과가 없습니다.</div>
@@ -345,11 +342,17 @@ function openExpand(dex,iconEl){
   if(!forms||forms.length<2)return;
   var col=iconEl.closest('.sitmCol');
   if(!col)return;
+  var row=document.querySelector('.prow[data-dex="'+dex+'"]');
+  var curIdx=row?parseInt(row.dataset.formIdx||'0',10):0;
+  if(!(curIdx>=0&&curIdx<forms.length))curIdx=0;
+  var order=[curIdx];
+  forms.forEach(function(f,i){if(i!==curIdx)order.push(i)});
   var ex=document.createElement('div');
   ex.id='stripExpand';
   ex.className='stripExpand';
-  ex.innerHTML=forms.map(function(f,i){
-    return '<div class="sitm'+(i===0?' base-mark':'')+'" data-dex="'+dex+'" data-idx="'+i+'"><img loading="lazy" src="'+f.img+'" alt="" onerror="this.style.opacity=.2"></div>';
+  ex.innerHTML=order.map(function(i,pos){
+    var f=forms[i];
+    return '<div class="sitm'+(pos===0?' base-mark':'')+'" data-dex="'+dex+'" data-idx="'+i+'"><div class="sitmImgWrap"><img class="simg" loading="lazy" src="'+f.img+'" alt="" onerror="this.style.opacity=.2"></div></div>';
   }).join('');
   col.appendChild(ex);
   expandOpenDex=String(dex);
@@ -376,7 +379,36 @@ function selectForm(dex,idx){
   swipeToForm(row,forms,cur,idx,dir);
 }
 
+function updateStripIcon(dex,newSrc,dir){
+  var icon=document.querySelector('#strip .sitm[data-dex="'+dex+'"]');
+  if(!icon)return;
+  var wrap=icon.querySelector('.sitmImgWrap');
+  if(!wrap)return;
+  var oldImg=wrap.querySelector('img');
+  if(oldImg&&oldImg.getAttribute('src')===newSrc)return;
+  var newImg=document.createElement('img');
+  newImg.className='simg';
+  newImg.loading='lazy';
+  newImg.alt='';
+  newImg.onerror=function(){this.style.opacity=.2};
+  newImg.src=newSrc;
+  newImg.style.transform='translateY('+(dir>=0?'100%':'-100%')+')';
+  wrap.appendChild(newImg);
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      if(oldImg){oldImg.style.transition='transform .28s ease';oldImg.style.transform='translateY('+(dir>=0?'-100%':'100%')+')';}
+      newImg.style.transition='transform .28s ease';
+      newImg.style.transform='translateY(0)';
+    });
+  });
+  setTimeout(function(){
+    if(oldImg&&oldImg.parentNode)oldImg.parentNode.removeChild(oldImg);
+    newImg.style.transition='';newImg.style.transform='';
+  },300);
+}
+
 function swipeToForm(row,forms,curIdx,nextIdx,dir){
+  updateStripIcon(row.dataset.dex,forms[nextIdx].img,dir);
   var pinner=row.querySelector('.pinner');
   var oldC=pinner.querySelector('.pcontent');
   if(!oldC)return;
@@ -439,7 +471,7 @@ function buildStripOnce(){
   strip.innerHTML=DEX.map(function(p){
     var multi=FORMS[p.dex]&&FORMS[p.dex].length>1;
     return '<div class="sitmCol" data-dex="'+p.dex+'">'
-      +'<div class="sitm'+(multi?' multi':'')+'" data-dex="'+p.dex+'" title="'+p.name+'"><img loading="lazy" src="'+p.img+'" alt="" onerror="this.style.opacity=.2"></div>'
+      +'<div class="sitm'+(multi?' multi':'')+'" data-dex="'+p.dex+'" title="'+p.name+'"><div class="sitmImgWrap"><img class="simg" loading="lazy" src="'+p.img+'" alt="" onerror="this.style.opacity=.2"></div></div>'
     +'</div>';
   }).join('');
   strip.querySelectorAll('.sitm').forEach(function(el){
@@ -493,36 +525,14 @@ function render(){
 $('q').addEventListener('input',function(e){q=e.target.value.trim();render()});
 $('qclear').onclick=function(){q='';$('q').value='';render()};
 $('hlogo').onclick=$('htitle').onclick=function(){q='';$('q').value='';render();window.scrollTo({top:0,behavior:'smooth'})};
-var SEARCH_ANIM_MS=150;
 function toggleSearch(){
   var box=$('searchWrapBox');
-  var isOpen=box.classList.contains('open');
-  if(!isOpen){
-    box.classList.remove('closing');
-    box.classList.add('open');
-    $('searchToggleBtn').classList.add('active');
-    setTimeout(function(){$('q').focus()},SEARCH_ANIM_MS+60);
-  }else{
-    $('searchToggleBtn').classList.remove('active');
-    box.classList.add('closing');
-    setTimeout(function(){
-      box.classList.remove('open');
-      box.classList.remove('closing');
-      q='';$('q').value='';render();
-    },SEARCH_ANIM_MS);
-  }
+  var open=box.classList.toggle('open');
+  $('searchToggleBtn').classList.toggle('active',open);
+  if(open){$('q').focus();}
+  else{q='';$('q').value='';render();}
 }
 $('searchToggleBtn').onclick=toggleSearch;
-function syncStripTop(){
-  var h=document.querySelector('header');
-  var sw=$('stripwrap');
-  if(h&&sw)sw.style.top=h.offsetHeight+'px';
-}
-window.addEventListener('resize',syncStripTop);
-syncStripTop();
-if(window.ResizeObserver){
-  new ResizeObserver(syncStripTop).observe(document.querySelector('header'));
-}
 
 function animateScrollBy(el,delta,duration){
   duration=duration||280;
