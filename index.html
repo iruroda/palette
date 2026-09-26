@@ -28,11 +28,11 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .title img{width:24px;height:24px;object-fit:contain}
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.searchwrap{position:relative;margin:0;height:0;overflow:hidden}
-.searchwrap.open{height:34px;margin:0 0 10px}
-.searchRow{position:relative;height:34px;transform:translateY(-100%);transition:transform .22s ease}
-.searchwrap.open .searchRow{transform:translateY(0)}
-.searchwrap.open.closing .searchRow{transform:translateY(-100%)}
+.searchwrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .28s ease}
+.searchwrap.open{grid-template-rows:1fr}
+.searchRow{position:relative;min-height:0;overflow:hidden;height:34px;margin:0 0 10px;box-sizing:border-box;transform:translateY(-14px);opacity:0;transition:transform .28s ease,opacity .28s ease}
+.searchwrap.open .searchRow{transform:translateY(0);opacity:1}
+
 .searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .searchIcon svg{width:16px;height:16px}
 .searchIcon svg circle,.searchIcon svg line{stroke:var(--accent);stroke-width:2;stroke-linecap:round}
@@ -361,10 +361,13 @@ function openExpand(dex,iconEl){
   expandOpenDex=String(dex);
   iconEl.classList.add('active');
 
-  // 현재 선택된 폼이 원래 자리(아이콘 바로 아래)에서 먼저 나타나고,
-  // 나머지는 그 자리에서 시작해 좌우 제자리로 퍼지도록 초기 오프셋을 준다.
+  // 순서는 원래 그대로 두고, 선택된 폼이 아이콘 바로 아래(가로 0 위치)에 오도록
+  // 벨트 컨테이너 자체를 -curIdx*stepW 만큼 이동시켜 정렬만 맞춘다.
   var items=ex.querySelectorAll('.sitm');
   var stepW=items.length>1?(items[1].offsetLeft-items[0].offsetLeft):0;
+  ex.style.transform='translateX('+(-curIdx*stepW)+'px)';
+
+  // 현재 선택된 폼이 먼저 나타나고, 나머지는 그 자리에서 시작해 좌우 제자리로 퍼진다.
   items.forEach(function(el,i){
     if(i===curIdx)return;
     var delta=(i-curIdx)*stepW;
@@ -583,18 +586,15 @@ function toggleSearch(){
   var box=$('searchWrapBox');
   var isOpen=box.classList.contains('open');
   if(!isOpen){
-    box.classList.remove('closing');
     box.classList.add('open');
     $('searchToggleBtn').classList.add('active');
     $('q').focus();
   }else{
+    box.classList.remove('open');
     $('searchToggleBtn').classList.remove('active');
-    box.classList.add('closing');
     setTimeout(function(){
-      box.classList.remove('open');
-      box.classList.remove('closing');
       q='';$('q').value='';render();
-    },220);
+    },280);
   }
 }
 $('searchToggleBtn').onclick=toggleSearch;
