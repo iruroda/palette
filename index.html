@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Palette de Pokémon</title>
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
@@ -64,7 +64,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .stripExpand{display:flex;gap:6px;margin-top:6px}
 .stripExpand .sitm.base-mark{border-color:var(--accent);border-width:1.5px}
 
-.plist{display:flex;flex-direction:column;gap:10px;padding:2px 14px 40px}
+.plist{display:flex;flex-direction:column;gap:10px;padding:2px 12px 0}
 .prow{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:16px}
 .prow[data-multi="1"]{touch-action:pan-y}
 .pinner{position:relative;width:100%}
@@ -109,10 +109,10 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 }
 
 .empty{text-align:center;color:var(--accent);padding:50px 20px;font-size:13px}
-.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px}
+.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:12px}
 
 #menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;align-items:center;justify-content:flex-end;pointer-events:none}
-.hicon-btn{position:relative;margin-top:calc(12px + env(safe-area-inset-top));margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
+.hicon-btn{position:relative;margin-top:12px;margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
 .hicon-btn svg{width:24px;height:24px;display:block}
 #quizBtn svg circle{fill:var(--accent)}
 #searchToggleBtn svg circle,#searchToggleBtn svg line{stroke:var(--accent);stroke-width:2.8;stroke-linecap:round;fill:none}
@@ -127,19 +127,19 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 #menuOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,20,20,.4);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s ease}
 #menuOverlay.open{opacity:1;pointer-events:auto}
 #mpanelWrap{position:fixed;top:0;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:31;display:flex;justify-content:flex-end;pointer-events:none}
-#mpanel{position:relative;width:min(320px,88vw);height:100%;background:var(--card);padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(0,0,0,.15);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:var(--card);padding:0 12px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(0,0,0,.15);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
 #mpanel.open{opacity:1;transform:scale(1);pointer-events:auto}
-.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:18px 0 6px;background:var(--card);z-index:1}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:12px 0 8px;background:var(--card);z-index:1}
 .mtitle img{width:22px;height:22px;object-fit:contain}
 .mtitle span{font-size:15px;font-weight:800}
-.mgreet{display:none;font-size:12.5px;font-weight:600;color:var(--accent);text-align:left;margin-top:48px}
+.mgreet{display:none;font-size:12.5px;font-weight:600;color:var(--accent);text-align:left;margin-top:36px}
 .mgreet.show{display:block}
 .mfooter{padding-top:8px;display:flex;gap:8px}
 .mbig{flex:1;text-align:center;background:var(--bg);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
 .mbig#loginBtn,.mbig[href*="/pokelab"]{height:36px;box-sizing:border-box;padding:0 10px}
 
-.msection{margin-top:36px}
-.mtitle + .msection{margin-top:18px}
+.msection{margin-top:24px}
+.mtitle + .msection{margin-top:8px}
 .msectitle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:800;color:var(--txt);padding:0}
 .msectitle .mdivider{flex:1;height:1px;background:var(--border)}
 .msubgroup{margin:12px 0 0}
