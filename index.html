@@ -22,7 +22,7 @@ input,textarea{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:te
 html,body{margin:0;padding:0;overscroll-behavior-y:none;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Malgun Gothic",sans-serif}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh}
 
-header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8px}
+header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 0}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding-right:43px;min-height:34px}
 #hlogo,#htitle{cursor:pointer}
 .title img{width:24px;height:24px;object-fit:contain}
@@ -43,15 +43,15 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .qclear svg path{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
 .search::placeholder{color:var(--accent);opacity:.7}
 
-.stripwrap{display:flex;align-items:stretch;padding:0 0 10px}
-.stripArrow{flex:0 0 20px;width:20px;align-self:stretch;border:1px solid var(--border);border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;min-height:46px}
+.stripwrap{display:flex;align-items:stretch;padding:0}
+.stripArrow{flex:0 0 20px;width:20px;height:46px;align-self:center;border:none;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .stripArrow svg{width:8px;height:14px;display:block}
-.stripArrow polygon{fill:var(--accent)}
+.stripArrow polygon{fill:#000}
 .stripArrow.left{margin-right:8px}
 .stripArrow.right{margin-left:8px}
 .stripArrow:active{background:var(--bg)}
 .stripClip{flex:1;min-width:0;position:relative;background:var(--bg)}
-.strip{display:flex;align-items:flex-start;gap:6px;overflow-x:auto;padding:4px 2px 6px;scroll-behavior:smooth}
+.strip{display:flex;align-items:flex-start;gap:6px;overflow-x:auto;padding:4px 2px 0;scroll-behavior:smooth}
 .strip::-webkit-scrollbar{height:0}
 .sitmCol{display:flex;flex-direction:column;flex:0 0 auto;width:46px}
 .sitm{position:relative;flex:0 0 auto;width:46px;height:46px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s ease,transform .1s ease}
@@ -135,11 +135,21 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 #mpanel.open{opacity:1;transform:scale(1);pointer-events:auto}
 .mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:12px 0 8px;background:var(--card);z-index:1}
 .mtitle img{width:22px;height:22px;object-fit:contain}
+.mthemecard{display:none;border:1px solid var(--border);border-radius:8px;padding:6px}
+.mthemecard.show{display:block}
+.mtc-top{display:flex;align-items:center;gap:8px}
+.mtc-top img{display:block;image-rendering:pixelated;image-rendering:-moz-crisp-edges;image-rendering:crisp-edges}
+.mtc-info{flex:1;min-width:0}
+.mtc-title{font-size:15px;font-weight:700;color:var(--txt)}
+.mtc-title .mtc-no{color:var(--accent);margin-right:2px}
+.mtc-desc{font-size:15px;font-weight:700;color:var(--txt)}
+.mtc-reset{width:100%;height:36px;margin-top:8px;border:none;border-radius:12px;background:var(--accent);color:var(--on-accent);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.mthemecard+.msection{margin-top:8px}
 .mtitle span{font-size:15px;font-weight:800}
 .mgreet{display:none;font-size:12.5px;font-weight:600;color:var(--accent);text-align:left;margin-top:36px}
 .mgreet.show{display:block}
 .mfooter{padding-top:8px;display:flex;gap:8px}
-.mbig{flex:1;text-align:center;background:var(--bg);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.mbig{flex:1;text-align:center;background:var(--border);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
 .mbig#loginBtn,.mbig[href*="/pokelab"]{height:36px;box-sizing:border-box;padding:0 10px}
 
 .msection{margin-top:24px}
@@ -150,7 +160,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .msublabel{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:7px}
 .mtoggles{display:flex;flex-wrap:wrap;gap:6px}
 .mtoggles.disabled-group{opacity:.35}
-.mtoggle{padding:0 12px;height:28px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--txt);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.mtoggle{padding:0 12px;height:28px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--border);background:var(--border);color:var(--txt);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .mtoggle.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .mtoggle:disabled,.disabled-group .mtoggle{pointer-events:none}
 
@@ -211,6 +221,17 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 <div id="mpanelWrap">
   <div id="mpanel">
     <div class="mtitle"><img src="favicon-192.png" alt="ball"><span>Palette de Pokémon</span></div>
+
+    <div class="mthemecard" id="mthemecard">
+      <div class="mtc-top">
+        <img id="mtcImg" src="" alt="">
+        <div class="mtc-info">
+          <div class="mtc-title"><span class="mtc-no" id="mtcNo"></span><span id="mtcName"></span>의</div>
+          <div class="mtc-desc">컬러 팔레트를 적용하고 있습니다.</div>
+        </div>
+      </div>
+      <button class="mtc-reset" id="mtcResetBtn" type="button">원래대로 되돌리기</button>
+    </div>
 
     <div class="msection">
       <div class="msectitle"><span>챌린지 설정</span><span class="mdivider"></span></div>
@@ -653,12 +674,18 @@ $('searchToggleBtn').onclick=toggleSearch;
 function animateScrollBy(el,delta,duration){
   duration=duration||280;
   var start=el.scrollLeft,startTime=null;
+  // CSS scroll-behavior:smooth가 켜져있으면 매 프레임 scrollLeft 대입이
+  // 각각 스무스 스크롤로 처리되면서 실제로는 거의 못 움직이는 문제가 있어
+  // 애니메이션 도중엔 강제로 auto로 바꿔준다.
+  var prevBehavior=el.style.scrollBehavior;
+  el.style.scrollBehavior='auto';
   function step(ts){
     if(startTime===null)startTime=ts;
     var t=Math.min((ts-startTime)/duration,1);
     var ease=1-Math.pow(1-t,3);
     el.scrollLeft=start+delta*ease;
-    if(t<1)requestAnimationFrame(step);
+    if(t<1){requestAnimationFrame(step);}
+    else{el.style.scrollBehavior=prevBehavior;}
   }
   requestAnimationFrame(step);
 }
@@ -667,8 +694,43 @@ function stripStep(){
   var one=cols.length>1?(cols[1].offsetLeft-cols[0].offsetLeft):52;
   return one*6;
 }
-$('stripArrowL').onclick=function(){animateScrollBy($('strip'),-stripStep(),360)};
-$('stripArrowR').onclick=function(){animateScrollBy($('strip'),stripStep(),360)};
+function bindArrowHold(btn,dir){
+  var holdTimer=null,rafId=null,holding=false,engaged=false,lastTs=null;
+  var HOLD_DELAY=300,SPEED=130; // SPEED: px/s, 누르고 있을 때 천천히 이동하는 속도
+  function frame(ts){
+    if(!holding)return;
+    if(lastTs===null)lastTs=ts;
+    var dt=ts-lastTs;lastTs=ts;
+    $('strip').scrollLeft+=dir*SPEED*(dt/1000);
+    rafId=requestAnimationFrame(frame);
+  }
+  function startHold(){
+    holding=true;engaged=true;lastTs=null;
+    $('strip').style.scrollBehavior='auto';
+    rafId=requestAnimationFrame(frame);
+  }
+  function stopHold(){
+    holding=false;
+    if(rafId)cancelAnimationFrame(rafId);
+    rafId=null;
+    $('strip').style.scrollBehavior='';
+  }
+  btn.addEventListener('pointerdown',function(e){
+    engaged=false;
+    clearTimeout(holdTimer);
+    holdTimer=setTimeout(startHold,HOLD_DELAY);
+  });
+  function release(){
+    clearTimeout(holdTimer);
+    if(holding){stopHold();}
+    else if(!engaged){animateScrollBy($('strip'),dir*stripStep(),360);}
+  }
+  btn.addEventListener('pointerup',release);
+  btn.addEventListener('pointerleave',function(){clearTimeout(holdTimer);if(holding)stopHold();});
+  btn.addEventListener('pointercancel',function(){clearTimeout(holdTimer);if(holding)stopHold();});
+}
+bindArrowHold($('stripArrowL'),-1);
+bindArrowHold($('stripArrowR'),1);
 
 function readToggleGroup(name){
   var group=document.querySelector('.mtoggles[data-group="'+name+'"]');
@@ -782,7 +844,27 @@ function syncBrushState(){
     var key=row?row.dataset.dex+':'+(row.dataset.formIdx||'0'):null;
     b.setAttribute('aria-pressed',key&&key===ACTIVE_THEME_KEY?'true':'false');
   });
+  syncThemeCard();
 }
+function syncThemeCard(){
+  var card=$('mthemecard');
+  if(!card)return;
+  if(!ACTIVE_THEME_KEY){card.classList.remove('show');return;}
+  var parts=ACTIVE_THEME_KEY.split(':');
+  var dex=parts[0],idx=parseInt(parts[1],10);
+  var f=FORMS[dex]&&FORMS[dex][idx];
+  if(!f){card.classList.remove('show');return;}
+  $('mtcImg').src=f.img;
+  $('mtcImg').alt=f.name;
+  $('mtcNo').textContent='No.'+pad4(dex);
+  $('mtcName').textContent=f.name;
+  card.classList.add('show');
+}
+$('mtcResetBtn').onclick=function(){
+  ACTIVE_THEME_KEY=null;
+  applyTheme(null);
+  syncBrushState();
+};
 $('mainList').addEventListener('click',function(e){
   var btn=e.target.closest&&e.target.closest('.brushbtn');
   if(!btn)return;
