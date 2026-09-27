@@ -22,7 +22,7 @@ input,textarea{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:te
 html,body{margin:0;padding:0;overscroll-behavior-y:none;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Malgun Gothic",sans-serif}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh}
 
-header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 0}
+header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8px}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding-right:43px;min-height:34px}
 #hlogo,#htitle{cursor:pointer}
 .title img{width:24px;height:24px;object-fit:contain}
@@ -36,7 +36,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 0
 .searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .searchIcon svg{width:16px;height:16px}
 .searchIcon svg circle,.searchIcon svg line{stroke:var(--accent);stroke-width:2;stroke-linecap:round}
-.search{width:100%;padding:9px 38px 9px 36px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--txt);font-size:14px;outline:none;height:34px;box-sizing:border-box}
+.search{width:100%;padding:9px 38px 9px 36px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--txt);font-size:14px;outline:none;height:34px;box-sizing:border-box;transition:border-color .3s ease}
 .search:focus{border-color:var(--accent)}
 .qclear{position:absolute;right:8px;top:50%;width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translateY(-50%)}
 .qclear svg{width:15px;height:15px}
@@ -44,7 +44,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 0
 .search::placeholder{color:var(--accent);opacity:.7}
 
 .stripwrap{display:flex;align-items:stretch;padding:0}
-.stripArrow{flex:0 0 20px;width:20px;height:46px;align-self:center;border:none;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.stripArrow{flex:0 0 20px;width:20px;height:46px;align-self:center;border:none;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:height .2s ease}
 .stripArrow svg{width:8px;height:14px;display:block}
 .stripArrow polygon{fill:#000}
 .stripArrow.left{margin-right:8px}
@@ -361,7 +361,7 @@ function getStripSpacer(){
   if(!sp){
     sp=document.createElement('div');
     sp.id='stripLeftSpacer';
-    sp.style.cssText='flex:0 0 auto;width:0px;align-self:stretch';
+    sp.style.cssText='flex:0 0 auto;width:0px;align-self:stretch;transition:width .28s ease';
     strip.insertBefore(sp,strip.firstChild);
   }
   return sp;
@@ -379,7 +379,7 @@ function ensureExpandRoom(col,idx,stepW){
   var delta=newExtra-prevExtra;
   if(delta!==0){
     sp.style.width=newExtra+'px';
-    strip.scrollLeft+=delta;
+    animateScrollBy(strip,delta,280);
   }
 }
 function closeExpand(){
@@ -391,9 +391,10 @@ function closeExpand(){
   var sp=document.getElementById('stripLeftSpacer');
   if(sp){
     var prevExtra=parseFloat(sp.style.width)||0;
-    if(prevExtra>0&&strip)strip.scrollLeft-=prevExtra;
+    if(prevExtra>0&&strip)animateScrollBy(strip,-prevExtra,280);
     sp.style.width='0px';
   }
+  syncArrowHeight();
 }
 
 function openExpand(dex,iconEl){
@@ -442,6 +443,7 @@ function openExpand(dex,iconEl){
       selectForm(d,idx);
     };
   });
+  syncArrowHeight();
 }
 
 // 서브벨트(폼 펼침)가 열려있는 상태에서 폼이 바뀌면, 순서는 그대로 두고
@@ -650,23 +652,40 @@ function applyFilter(){
 function render(){
   closeExpand();
   applyFilter();
+  syncArrowHeight();
 }
 $('q').addEventListener('input',function(e){q=e.target.value.trim();render()});
 $('qclear').onclick=function(){q='';$('q').value='';render()};
 $('hlogo').onclick=$('htitle').onclick=function(){q='';$('q').value='';render();window.scrollTo({top:0,behavior:'smooth'})};
+function onSearchTransitionEnd(e){
+  var box=$('searchWrapBox');
+  if(e.target!==box||e.propertyName!=='height')return;
+  if(box.classList.contains('open')){
+    $('q').focus();
+  }else{
+    q='';$('q').value='';render();
+  }
+}
+$('searchWrapBox').addEventListener('transitionend',onSearchTransitionEnd);
 function toggleSearch(){
   var box=$('searchWrapBox');
   var isOpen=box.classList.contains('open');
   if(!isOpen){
     box.classList.add('open');
     $('searchToggleBtn').classList.add('active');
-    $('q').focus();
+    var qEl=$('q');
+    qEl.style.transition='none';
+    qEl.style.borderColor='#000';
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        qEl.style.transition='';
+        qEl.style.borderColor='';
+      });
+    });
   }else{
+    closeExpand();
     box.classList.remove('open');
     $('searchToggleBtn').classList.remove('active');
-    setTimeout(function(){
-      q='';$('q').value='';render();
-    },280);
   }
 }
 $('searchToggleBtn').onclick=toggleSearch;
@@ -695,17 +714,19 @@ function stripStep(){
   return one*6;
 }
 function bindArrowHold(btn,dir){
-  var holdTimer=null,rafId=null,holding=false,engaged=false,lastTs=null;
-  var HOLD_DELAY=300,SPEED=130; // SPEED: px/s, 누르고 있을 때 천천히 이동하는 속도
+  var holdTimer=null,rafId=null,holding=false,engaged=false,lastTs=null,holdStartTs=null;
+  var HOLD_DELAY=300,SPEED=130,MAX_SPEED=260,RAMP_MS=1000; // SPEED: px/s, 누르고 있으면 RAMP_MS 동안 MAX_SPEED(2배)까지 서서히 빨라짐
   function frame(ts){
     if(!holding)return;
-    if(lastTs===null)lastTs=ts;
+    if(lastTs===null){lastTs=ts;holdStartTs=ts;}
     var dt=ts-lastTs;lastTs=ts;
-    $('strip').scrollLeft+=dir*SPEED*(dt/1000);
+    var elapsed=ts-holdStartTs;
+    var speed=elapsed>=RAMP_MS?MAX_SPEED:SPEED+(MAX_SPEED-SPEED)*(elapsed/RAMP_MS);
+    $('strip').scrollLeft+=dir*speed*(dt/1000);
     rafId=requestAnimationFrame(frame);
   }
   function startHold(){
-    holding=true;engaged=true;lastTs=null;
+    holding=true;engaged=true;lastTs=null;holdStartTs=null;
     $('strip').style.scrollBehavior='auto';
     rafId=requestAnimationFrame(frame);
   }
@@ -729,6 +750,25 @@ function bindArrowHold(btn,dir){
   btn.addEventListener('pointerleave',function(){clearTimeout(holdTimer);if(holding)stopHold();});
   btn.addEventListener('pointercancel',function(){clearTimeout(holdTimer);if(holding)stopHold();});
 }
+function syncArrowHeight(){
+  var strip=$('strip');
+  if(!strip)return;
+  var col=null;
+  if(expandOpenDex){
+    var c=strip.querySelector('.sitmCol[data-dex="'+expandOpenDex+'"]');
+    if(c&&c.offsetParent!==null)col=c;
+  }
+  if(!col){
+    var cols=strip.querySelectorAll('.sitmCol');
+    for(var i=0;i<cols.length;i++){
+      if(cols[i].offsetParent!==null){col=cols[i];break;}
+    }
+  }
+  var h=col?col.getBoundingClientRect().height:46;
+  var arrows=[$('stripArrowL'),$('stripArrowR')];
+  arrows.forEach(function(btn){if(btn)btn.style.height=h+'px'});
+}
+window.addEventListener('resize',syncArrowHeight);
 bindArrowHold($('stripArrowL'),-1);
 bindArrowHold($('stripArrowR'),1);
 
@@ -779,6 +819,7 @@ try{
   DEX=buildBaseDex(FORMSDEX);
   buildStripOnce();
   buildListOnce();
+  syncArrowHeight();
 }catch(e){
   $('mainList').innerHTML='<div class="empty">데이터를 불러오지 못했습니다.</div>';
   console.error(e);
