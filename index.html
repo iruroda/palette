@@ -113,7 +113,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 }
 
 .empty{text-align:center;color:var(--accent);padding:50px 20px;font-size:13px}
-.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:12px}
+.sitefooter{font-size:7.5px;color:var(--accent);text-align:left;line-height:1.5;padding:12px}
 
 #menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;align-items:center;justify-content:flex-end;pointer-events:none}
 .hicon-btn{position:relative;margin-top:12px;margin-right:2px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;flex-shrink:0}
@@ -183,10 +183,13 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
     <symbol id="brushIcon" viewBox="0 0 20 20">
       <mask id="brushMask" maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
         <rect width="20" height="20" fill="#fff"/>
-        <g transform="translate(-.8 .8) rotate(45 10 10)" fill="#000" stroke="#000" stroke-width="1" stroke-linejoin="round">
+        <g transform="translate(-1.45 1.45) rotate(45 10 10) translate(10 10) scale(1.25) translate(-10 -10)" fill="#000" stroke="#000" stroke-width="1" stroke-linejoin="round">
           <path d="M5.9 8.3 5.5 3.6h9l-.4 4.7z"/>
-          <path d="M6.3 10.4h7.4v1.6H6.3z"/>
+          <path d="M5.3 10.4h9.4v1.6H5.3z"/>
           <path d="M8.6 12v3.4a1.4 1.4 0 0 0 2.8 0V12z"/>
+          <path d="M8 2.6 9 2.6 8.5 6.4z" fill="#fff" stroke="none"/>
+          <path d="M11 2.6 12 2.6 11.5 6.4z" fill="#fff" stroke="none"/>
+          <circle cx="10" cy="15.7" r="0.6" fill="#fff" stroke="none"/>
         </g>
       </mask>
       <rect width="20" height="20" rx="5" mask="url(#brushMask)" style="fill:var(--accent)"/>
