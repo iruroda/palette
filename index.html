@@ -28,10 +28,10 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .title img{width:24px;height:24px;object-fit:contain}
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.searchwrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .28s ease}
-.searchwrap.open{grid-template-rows:1fr}
-.searchRow{position:relative;min-height:0;overflow:hidden;height:34px;margin:0 0 10px;box-sizing:border-box;transform:translateY(-14px);opacity:0;transition:transform .28s ease,opacity .28s ease}
-.searchwrap.open .searchRow{transform:translateY(0);opacity:1}
+.searchwrap{position:relative;margin:0;height:0;overflow:hidden;transition:height .25s ease,margin .25s ease}
+.searchwrap.open{height:34px;margin:0 0 10px}
+.searchRow{position:relative;height:34px}
+
 
 .searchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .searchIcon svg{width:16px;height:16px}
@@ -131,7 +131,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 #menuOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,20,20,.4);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s ease}
 #menuOverlay.open{opacity:1;pointer-events:auto}
 #mpanelWrap{position:fixed;top:0;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:31;display:flex;justify-content:flex-end;pointer-events:none}
-#mpanel{position:relative;width:min(320px,88vw);height:100%;background:var(--card);padding:0 12px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(0,0,0,.15);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:var(--card);padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(0,0,0,.15);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
 #mpanel.open{opacity:1;transform:scale(1);pointer-events:auto}
 .mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:12px 0 8px;background:var(--card);z-index:1}
 .mtitle img{width:22px;height:22px;object-fit:contain}
@@ -385,9 +385,23 @@ function openExpand(dex,iconEl){
       e.stopPropagation();
       var d=el.dataset.dex,idx=parseInt(el.dataset.idx,10);
       selectForm(d,idx);
-      closeExpand();
     };
   });
+}
+
+// 서브벨트(폼 펼침)가 열려있는 상태에서 폼이 바뀌면, 순서는 그대로 두고
+// 선택된 카드가 아이콘 바로 아래로 오도록 벨트 전체를 옆으로 슬라이드시킨다.
+function slideExpand(dex,nextIdx){
+  var ex=document.getElementById('stripExpand');
+  if(!ex||expandOpenDex!==String(dex))return;
+  var items=ex.querySelectorAll('.sitm');
+  if(items.length<2)return;
+  var stepW=items[1].offsetLeft-items[0].offsetLeft;
+  items.forEach(function(el){
+    el.classList.toggle('base-mark',parseInt(el.dataset.idx,10)===nextIdx);
+  });
+  ex.style.transition='transform .28s ease';
+  ex.style.transform='translateX('+(-nextIdx*stepW)+'px)';
 }
 
 function selectForm(dex,idx){
@@ -466,6 +480,7 @@ function updateStripIcon(dex,forms,curIdx,nextIdx,dir){
 
 function swipeToForm(row,forms,curIdx,nextIdx,dir){
   updateStripIcon(row.dataset.dex,forms,curIdx,nextIdx,dir);
+  slideExpand(row.dataset.dex,nextIdx);
   var pinner=row.querySelector('.pinner');
   var oldC=pinner.querySelector('.pcontent');
   if(!oldC)return;
