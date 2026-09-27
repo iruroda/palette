@@ -44,7 +44,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .search::placeholder{color:var(--accent);opacity:.7}
 
 .stripwrap{display:flex;align-items:stretch;padding:0}
-.stripArrow{flex:0 0 20px;width:20px;height:46px;align-self:center;border:none;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:height .2s ease}
+.stripArrow{flex:0 0 20px;width:20px;height:46px;align-self:flex-start;border:none;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:height .2s ease}
 .stripArrow svg{width:8px;height:14px;display:block}
 .stripArrow polygon{fill:#000}
 .stripArrow.left{margin-right:8px}
@@ -87,7 +87,7 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .pr-hw .hcol{flex:0 0 50%;display:flex;gap:3px;align-items:baseline;min-width:0}
 .pr-hw .hcol .v{white-space:nowrap}
 .typebadges{display:flex;gap:6px;flex-wrap:wrap}
-.typebadge{display:inline-flex;align-items:center;padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff}
+.typebadge{display:inline-flex;align-items:center;justify-content:center;width:56.5px;padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff}
 .palette{display:flex;flex-direction:column;gap:5px;margin-top:2px}
 .paletterow{display:flex;gap:5px}
 .paletterow .swatchbar{flex:1;min-width:0}
@@ -101,6 +101,37 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 .brushbtn{position:absolute;top:11px;right:38px;width:20px;height:20px;z-index:2;padding:0;margin:0;border:none;background:none;cursor:pointer;display:block;touch-action:manipulation}
 .brushbtn svg{width:100%;height:100%;display:block}
 .brushbtn:active{opacity:.7}
+
+/* ---- 퀴즈 모드 ---- */
+#homeBtn svg rect{fill:var(--accent)}
+body.quizmode header{display:none}
+body.quizmode #searchToggleBtn{opacity:.35;pointer-events:none}
+body.quizmode .plist:not(#quizArea),body.quizmode #emptyMsg,body.quizmode .sitefooter{display:none}
+#quizArea{padding:58px 12px 0}
+.quizcontent{height:auto;padding-bottom:16px}
+.quiztop{padding-right:60px}
+.quiztop .pname{font-size:13.5px;font-weight:700;color:var(--txt)}
+.quizleft{display:flex;align-items:center}
+.quizleft .palette{width:100%}
+.quizdesc{font-size:13px;line-height:1.5;color:var(--txt);font-weight:600}
+.quizhintline{font-size:11.5px;color:var(--accent);font-weight:600;min-height:15px;margin-top:6px}
+.quizanswer-row{display:flex;gap:8px;align-items:center;margin-top:10px;padding-top:12px;border-top:1px solid var(--border)}
+.quizinput-wrap{flex:1;position:relative;display:flex;align-items:center;min-width:0}
+.quizinput-wrap input{width:100%;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--txt);font-size:13px;padding:0 34px 0 12px;box-sizing:border-box;outline:none;font-family:inherit}
+.quizinput-wrap button{position:absolute;right:6px;width:20px;height:20px;border:none;background:none;cursor:pointer;padding:0;color:var(--accent)}
+.quizinput-wrap button svg{width:100%;height:100%;display:block}
+.quizhintbtn{flex:0 0 auto;height:36px;padding:0 14px;border:none;border-radius:10px;background:var(--accent);color:var(--on-accent);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.quizhintbtn:disabled{opacity:.4;cursor:default}
+.quizfeedback{font-size:12.5px;font-weight:700;min-height:16px;margin-top:8px}
+.quizfeedback.correct{color:#3a8f5c}
+.quizfeedback.wrong{color:#c0392b}
+.quizpawbadge{position:absolute;top:14px;right:14px;width:40px;height:40px;z-index:2;pointer-events:none}
+.quizpawbadge svg{width:100%;height:100%;display:block}
+.quizpawbadge circle{stroke-width:7;transition:fill .25s ease,stroke .25s ease}
+.quizpawbadge.hint0 circle{fill:#D4AF37;stroke:#D4AF37}
+.quizpawbadge.hint1 circle{fill:#B8B8B8;stroke:#B8B8B8}
+.quizpawbadge.hint2 circle{fill:#CD7F32;stroke:#CD7F32}
+.quizpawbadge.hint3 circle{fill:#79B84C;stroke:#79B84C}
 
 @media (max-width:380px){
   .pcontent{height:210px}
@@ -215,11 +246,12 @@ header{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 12px 8
 
   <div class="plist" id="mainList"></div>
   <div class="empty" id="emptyMsg" style="display:none">검색 결과가 없습니다.</div>
+  <div class="plist" id="quizArea" style="display:none"></div>
 
   <div class="sitefooter">본 사이트는 팬이 만든 비공식 사이트로, 닌텐도, 게임프리크, 주식회사 포켓몬과는 어떠한 관계도 없습니다. Pokemon은 닌텐도 / Creatures Inc. / Game Freak Inc.의 상표입니다. 모든 게임 콘텐츠, 이미지, 상표는 각 권리자에게 귀속됩니다.</div>
 </div>
 
-<div id="menubtnWrap"><button id="quizBtn" class="hicon-btn" type="button" aria-label="퀴즈 메뉴"><svg viewBox="0 0 110 98"><circle cx="55" cy="71" r="26"></circle><circle cx="16.5" cy="32.5" r="16"></circle><circle cx="55" cy="16.5" r="16"></circle><circle cx="93.5" cy="32.5" r="16"></circle></svg></button><button id="searchToggleBtn" class="hicon-btn" type="button" aria-label="검색 토글"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
+<div id="menubtnWrap"><button id="homeBtn" class="hicon-btn" type="button" aria-label="메인 화면으로"><svg viewBox="0 0 30 18"><rect x="-4" y="2" width="10" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/><rect x="24" y="2" width="10" height="14" rx="3"/></svg></button><button id="quizBtn" class="hicon-btn" type="button" aria-label="퀴즈 메뉴"><svg viewBox="0 0 110 98"><circle cx="55" cy="71" r="26"></circle><circle cx="16.5" cy="32.5" r="16"></circle><circle cx="55" cy="16.5" r="16"></circle><circle cx="93.5" cy="32.5" r="16"></circle></svg></button><button id="searchToggleBtn" class="hicon-btn" type="button" aria-label="검색 토글"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
 <div id="menuOverlay"></div>
 <div id="mpanelWrap">
   <div id="mpanel">
@@ -664,7 +696,9 @@ function onSearchTransitionEnd(e){
   var box=$('searchWrapBox');
   if(e.target!==box||e.propertyName!=='height')return;
   if(box.classList.contains('open')){
-    $('q').focus();
+    var qEl=$('q');
+    qEl.focus();
+    qEl.style.borderColor='';
   }else{
     q='';$('q').value='';render();
   }
@@ -678,11 +712,10 @@ function toggleSearch(){
     $('searchToggleBtn').classList.add('active');
     var qEl=$('q');
     qEl.style.transition='none';
-    qEl.style.borderColor='#000';
+    qEl.style.borderColor='var(--accent)';
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
         qEl.style.transition='';
-        qEl.style.borderColor='';
       });
     });
   }else{
@@ -930,6 +963,149 @@ function openMenu(){$('menubtn').classList.add('open');$('menuOverlay').classLis
 function closeMenu(){$('menubtn').classList.remove('open');$('menuOverlay').classList.remove('open');$('mpanel').classList.remove('open');$('menubtnWrap').classList.remove('menuopen');document.documentElement.style.overflow=''}
 $('menubtn').onclick=function(){if($('menuOverlay').classList.contains('open'))closeMenu();else openMenu()};
 $('menuOverlay').addEventListener('click',function(e){if(e.target.id==='menuOverlay')closeMenu()});
+
+// ---- 퀴즈 모드: 컬러 팔레트 보고 포켓몬 맞히기 ----
+var QUIZ_REGIONS=[
+  [1,151,'관동'],[152,251,'성도'],[252,386,'호연'],[387,493,'신오'],
+  [494,649,'하나'],[650,721,'칼로스'],[722,809,'알로라'],[810,905,'가라르'],
+  [906,1025,'팔데아']
+];
+function quizRegionByDex(n){
+  for(var i=0;i<QUIZ_REGIONS.length;i++){
+    var r=QUIZ_REGIONS[i];
+    if(n>=r[0]&&n<=r[1])return r[2];
+  }
+  return '미지의';
+}
+function quizRegionForForm(dex,f){
+  var name=f.name||'';
+  if(name.indexOf('(알로라의 모습)')>-1)return '알로라';
+  if(name.indexOf('(가라르의 모습)')>-1)return '가라르';
+  if(name.indexOf('(히스이의 모습)')>-1)return '히스이';
+  if(name.indexOf('(팔데아의 모습)')>-1)return '팔데아';
+  return quizRegionByDex(parseInt(dex,10));
+}
+function quizRegionPhrase(region){
+  return region==='미지의'?'미지의 지방':region+'지방';
+}
+function quizTypesText(types){
+  return (types||[]).join('·')+'타입';
+}
+function quizBaseName(f){
+  return (f&&f.name||'').replace(/\([^)]*\)/g,'').trim();
+}
+
+var quizPool=null;
+function buildQuizPool(){
+  if(quizPool)return quizPool;
+  quizPool=[];
+  Object.keys(FORMS).forEach(function(dex){
+    (FORMS[dex]||[]).forEach(function(f,idx){
+      quizPool.push({dex:dex,idx:idx,form:f});
+    });
+  });
+  return quizPool;
+}
+
+var quizModeActive=false;
+var quizCurrent=null;
+var quizHintLevel=0;
+
+function enterQuizMode(){
+  quizModeActive=true;
+  document.body.classList.add('quizmode');
+  closeExpand();
+  if($('searchWrapBox').classList.contains('open'))toggleSearch();
+  pickQuizQuestion();
+}
+function exitQuizMode(){
+  quizModeActive=false;
+  document.body.classList.remove('quizmode');
+  var area=$('quizArea');
+  area.style.display='none';
+  area.innerHTML='';
+  quizCurrent=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function pickQuizQuestion(){
+  var pool=buildQuizPool();
+  if(!pool.length)return;
+  quizCurrent=pool[Math.floor(Math.random()*pool.length)];
+  quizHintLevel=0;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  var area=$('quizArea');
+  var f=quizCurrent.form;
+  var region=quizRegionForForm(quizCurrent.dex,f);
+  var desc=quizRegionPhrase(region)+'에서 처음 발견된 '+quizTypesText(f.types)+' 포켓몬';
+  area.innerHTML=
+    '<div class="prow quizrow">'
+      +'<span class="pquizmark quizpawbadge hint0" id="quizPawBadge">'+PAW_SVG+'</span>'
+      +'<div class="pinner">'
+        +'<div class="pcontent quizcontent">'
+          +'<div class="ptop quiztop"><span class="pname">아래 컬러 팔레트의 주인공을 맞혀보세요</span></div>'
+          +'<div class="pbody">'
+            +'<div class="pleft quizleft">'+paletteHTML(f.top3,f.top6)+'</div>'
+            +'<div class="pright">'
+              +'<div class="pr-line quizdesc">'+desc+'</div>'
+              +'<div class="quizhintline" id="quizHintLine"></div>'
+            +'</div>'
+          +'</div>'
+          +'<div class="quizanswer-row">'
+            +'<div class="quizinput-wrap"><input type="text" id="quizAnswerInput" autocomplete="off" placeholder="포켓몬 이름"><button type="button" id="quizClearBtn" aria-label="지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>'
+            +'<button type="button" id="quizHintBtn" class="quizhintbtn">힌트 추가</button>'
+          +'</div>'
+          +'<div class="quizfeedback" id="quizFeedback"></div>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  area.style.display='block';
+  $('quizAnswerInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkQuizAnswer();});
+  $('quizClearBtn').onclick=function(){$('quizAnswerInput').value='';$('quizAnswerInput').focus();};
+  $('quizHintBtn').onclick=applyQuizHint;
+  $('quizAnswerInput').focus();
+}
+
+function applyQuizHint(){
+  if(quizHintLevel>=3)return;
+  quizHintLevel++;
+  var badge=$('quizPawBadge');
+  badge.classList.remove('hint0','hint1','hint2','hint3');
+  badge.classList.add('hint'+quizHintLevel);
+  var f=quizCurrent.form;
+  var line=$('quizHintLine');
+  var msgs=[];
+  if(quizHintLevel>=1)msgs.push('분류: '+(f.category||'?'));
+  if(quizHintLevel>=2)msgs.push('이름 길이: '+quizBaseName(f).length+'글자');
+  if(quizHintLevel>=3)msgs.push('첫 글자: '+quizBaseName(f).charAt(0));
+  line.textContent='힌트 - '+msgs.join(' / ');
+  if(quizHintLevel>=3)$('quizHintBtn').disabled=true;
+}
+
+function checkQuizAnswer(){
+  var input=$('quizAnswerInput');
+  var val=(input.value||'').trim();
+  if(!val)return;
+  var f=quizCurrent.form;
+  var answer=quizBaseName(f);
+  var fb=$('quizFeedback');
+  if(val===answer){
+    fb.textContent='정답! '+f.name;
+    fb.className='quizfeedback correct';
+    var mark=document.querySelector('.prow[data-dex="'+quizCurrent.dex+'"] .pquizmark');
+    if(mark)mark.classList.add('solved');
+    setTimeout(pickQuizQuestion,900);
+  }else{
+    fb.textContent='다시 시도해봐';
+    fb.className='quizfeedback wrong';
+  }
+}
+
+$('homeBtn').onclick=function(){if(quizModeActive)exitQuizMode();};
+$('quizBtn').onclick=function(){enterQuizMode();};
 
 // 페이지 전체 드래그/우클릭 금지
 document.addEventListener('contextmenu',function(e){e.preventDefault()});
