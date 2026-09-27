@@ -334,12 +334,45 @@ function toRowData(dex,f){
   return {dex:dex,name:f.name,category:f.category,height:f.height,weight:f.weight,types:f.types,img:f.img,top3:f.top3,top6:f.top6};
 }
 
+function getStripSpacer(){
+  var strip=$('strip');
+  var sp=document.getElementById('stripLeftSpacer');
+  if(!sp){
+    sp=document.createElement('div');
+    sp.id='stripLeftSpacer';
+    sp.style.cssText='flex:0 0 auto;width:0px;align-self:stretch';
+    strip.insertBefore(sp,strip.firstChild);
+  }
+  return sp;
+}
+// 서브벨트가 아이콘 왼쪽으로 필요한 만큼 실제 스크롤 가능한 여백을 확보한다.
+// (검색 필터 등으로 앞에 다른 포켓몬 칸이 없을 때, translateX만으로는 왼쪽으로
+//  스크롤해서 볼 수 없는 문제를 막기 위해 진짜 레이아웃 공간을 만들어준다.)
+function ensureExpandRoom(col,idx,stepW){
+  var strip=$('strip');
+  var sp=getStripSpacer();
+  var prevExtra=parseFloat(sp.style.width)||0;
+  var natural=col.offsetLeft-prevExtra;
+  var needed=idx*stepW;
+  var newExtra=Math.max(0,needed-natural);
+  var delta=newExtra-prevExtra;
+  if(delta!==0){
+    sp.style.width=newExtra+'px';
+    strip.scrollLeft+=delta;
+  }
+}
 function closeExpand(){
   var ex=document.getElementById('stripExpand');
   if(ex)ex.remove();
   expandOpenDex=null;
   var strip=$('strip');
   if(strip)strip.querySelectorAll('.sitm.active').forEach(function(el){el.classList.remove('active')});
+  var sp=document.getElementById('stripLeftSpacer');
+  if(sp){
+    var prevExtra=parseFloat(sp.style.width)||0;
+    if(prevExtra>0&&strip)strip.scrollLeft-=prevExtra;
+    sp.style.width='0px';
+  }
 }
 
 function openExpand(dex,iconEl){
@@ -365,6 +398,7 @@ function openExpand(dex,iconEl){
   // 벨트 컨테이너 자체를 -curIdx*stepW 만큼 이동시켜 정렬만 맞춘다.
   var items=ex.querySelectorAll('.sitm');
   var stepW=items.length>1?(items[1].offsetLeft-items[0].offsetLeft):0;
+  ensureExpandRoom(col,curIdx,stepW);
   ex.style.transform='translateX('+(-curIdx*stepW)+'px)';
 
   // 현재 선택된 폼이 먼저 나타나고, 나머지는 그 자리에서 시작해 좌우 제자리로 퍼진다.
@@ -397,6 +431,8 @@ function slideExpand(dex,nextIdx){
   var items=ex.querySelectorAll('.sitm');
   if(items.length<2)return;
   var stepW=items[1].offsetLeft-items[0].offsetLeft;
+  var col=ex.closest('.sitmCol');
+  if(col)ensureExpandRoom(col,nextIdx,stepW);
   items.forEach(function(el){
     el.classList.toggle('base-mark',parseInt(el.dataset.idx,10)===nextIdx);
   });
